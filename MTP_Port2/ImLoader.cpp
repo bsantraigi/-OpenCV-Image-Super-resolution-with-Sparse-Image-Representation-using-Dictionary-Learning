@@ -19,13 +19,24 @@ ImLoader::~ImLoader()
 
 vector<vector<double>> ImLoader::GetDataMatrix()
 {
+	// prepare file list - ids only: 1:end - 1/count:end
+	/*vector<string> flist = Utilities::GetAllFiles(this->path);
+	for each (string f in flist)
+	{
+		cout << f << endl;
+	}*/
+	// decide what would be the size of data matrix - Calculate exact size of matrix in MB
+
+	// Call loadimage with each id
+
+	// prepare and return datamatrix or Y
 	vector<vector<double> > dataMatrix(patchSize*patchSize, vector<double>(1000, 0));
 	int from = 0;
 	for (int f = 0; f < 2; f++) {
 		Mat image = LoadImage(f+1, reduceTo);
 		from = PatchImage(dataMatrix, from, image);
 	}
-
+	//DisplayFloat(dataMatrix, "DataMat");
 	return dataMatrix;
 }
 
@@ -64,7 +75,7 @@ int ImLoader::PatchImage(vector<vector<double> > &dataMatrix, int from, Mat& ima
 			{
 				for (int v = 0; v < patchSize; v++)
 				{
-					dataMatrix[u*patchSize + v][from] = image.ptr(i + v)[j + u]/255;
+					dataMatrix[u*patchSize + v][from] = (float)image.ptr(i + v)[j + u]/255.0f;
 				}
 			}
 			from++;
@@ -90,7 +101,7 @@ int ImLoader::PatchImage(vector<vector<double> > &dataMatrix, int from, Mat& ima
 		}
 		cout << endl;
 	}*/
-	DisplayFloat(dataMatrix, "DataMat");
+	
 	return from;
 }
 
@@ -98,7 +109,6 @@ void ImLoader::DisplayFloat(vector<vector<double>>& fImage, string s)
 {
 	Float2D f2d(fImage);
 	double** fMat = f2d.get();
-	cout << sizeof(double) << endl;
 	Mat image = Mat(fImage.size(), fImage[0].size(), CV_32FC1, fMat);
 	Utilities::DisplayMat(image, s);	
 }

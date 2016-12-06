@@ -26,8 +26,9 @@ public:
 	ImLoader(int reduceTo = 16, int patchSize = 8, string folder = "Faces_easy",
 		string path = "D:/Users/Bishal Santra/Documents/MATLAB/MTP/neural_generative/caltech101/101_ObjectCategories/");
 	~ImLoader();
-	vector<vector<double> > GetDataMatrix();
+	vector<vector<double> > GetDataMatrix(int totalImage2Data = 2);
 	Mat LoadImage(int id, int reduceTo = 0);
+	Mat LoadImage(string fpath, int reduceTo);
 	int PatchImage(vector<vector<double>>& dataMatrix, int from, Mat &image);
 	void DisplayFloat(vector<vector<double> >& fImage, string s);
 };

@@ -5,6 +5,11 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 #include <vector>
+#include <fstream>
+
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 using namespace cv;
@@ -12,11 +17,13 @@ using namespace cv;
 class Utilities
 {
 private:
-	//static std::wstring s2ws(const std::string & s);
+	static map<string, int> groupCounts;
+	static map<string, vector<string> > groupedImages;
 public:	
 	Utilities();	
 	//static vector<string> GetAllFiles(string folder);
 	static void DisplayMat(Mat& image, string s="");
+	static vector<string> GetAllFiles(string imageCategory);
 	~Utilities();
 };
 

@@ -1,6 +1,6 @@
 from os import listdir
 from os.path import isfile, join, isdir
-rootfolder = "D:/Users/Bishal Santra/Documents/MATLAB/MTP/neural_generative/caltech101/101_ObjectCategories/"
+rootfolder = "D:/ProjectData/caltech101/101_ObjectCategories/"
 onlyfolders= [f for f in listdir(rootfolder) if isdir(join(rootfolder, f))]
 
 with open('pointerList.list1', 'w') as plist:

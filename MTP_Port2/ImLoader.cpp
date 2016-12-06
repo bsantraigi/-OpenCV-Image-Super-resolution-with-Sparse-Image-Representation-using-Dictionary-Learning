@@ -1,6 +1,6 @@
 #include "ImLoader.h"
 
-ImLoader::ImLoader():ImLoader(16, 8, "Faces_easy", "D:/Users/Bishal Santra/Documents/MATLAB/MTP/neural_generative/caltech101/101_ObjectCategories/") {}
+ImLoader::ImLoader():ImLoader(16, 8, "Faces_easy", "D:/ProjectData/caltech101/101_ObjectCategories/") {}
 
 ImLoader::ImLoader(int reduceTo, int patchSize,  string folder, string path) : folder(folder), path(path)
 {
@@ -17,26 +17,29 @@ ImLoader::~ImLoader()
 {
 }
 
-vector<vector<double>> ImLoader::GetDataMatrix()
+vector<vector<double>> ImLoader::GetDataMatrix(int totalImg2Data)
 {
+	
 	// prepare file list - ids only: 1:end - 1/count:end
-	/*vector<string> flist = Utilities::GetAllFiles(this->path);
-	for each (string f in flist)
-	{
-		cout << f << endl;
-	}*/
-	// decide what would be the size of data matrix - Calculate exact size of matrix in MB
+	vector<string> flist = Utilities::GetAllFiles(this->folder);
 
+	// decide what would be the size of data matrix - Calculate exact size of matrix in MB
+	map<int, Mat> indices;
+	int dataMatSize = 0;
+	for (int i = 0; i < flist.size(); i += (flist.size() - 1) / (totalImg2Data - 1)) {
+		indices[i] = LoadImage(flist[i], reduceTo);
+		dataMatSize += (indices[i].rows - patchSize + 1)*(indices[i].cols - patchSize + 1);
+	}
 	// Call loadimage with each id
 
 	// prepare and return datamatrix or Y
-	vector<vector<double> > dataMatrix(patchSize*patchSize, vector<double>(1000, 0));
+	vector<vector<double> > dataMatrix(patchSize*patchSize, vector<double>(dataMatSize, 0));
 	int from = 0;
-	for (int f = 0; f < 2; f++) {
-		Mat image = LoadImage(f+1, reduceTo);
-		from = PatchImage(dataMatrix, from, image);
+	for(map<int, Mat>::iterator it = indices.begin(); it != indices.end(); it++)
+	{		
+		from = PatchImage(dataMatrix, from, it->second);
 	}
-	//DisplayFloat(dataMatrix, "DataMat");
+	DisplayFloat(dataMatrix, "DataMat");
 	return dataMatrix;
 }
 
@@ -46,6 +49,10 @@ Mat ImLoader::LoadImage(int id, int reduceTo)
 	string fpath;
 	sprintf(imname, "/image_%04d.jpg", id);
 	fpath = string(this->path.c_str()).append(imname);
+	return LoadImage(fpath, reduceTo);
+}
+Mat ImLoader::LoadImage(string fpath, int reduceTo) 
+{
 	Mat image = imread(fpath, IMREAD_COLOR); // Read the file
 
 	if (image.empty()) // Check for invalid input
@@ -75,15 +82,14 @@ int ImLoader::PatchImage(vector<vector<double> > &dataMatrix, int from, Mat& ima
 			{
 				for (int v = 0; v < patchSize; v++)
 				{
-					dataMatrix[u*patchSize + v][from] = (float)image.ptr(i + v)[j + u]/255.0f;
+					dataMatrix[u*patchSize + v][from] = (double)image.ptr(i + v)[j + u]/255.0f;
 				}
 			}
 			from++;
 		}
 	}
 
-	//ECHO HERE - TOBE REMOVED
-	
+	//ECHO HERE - TOBE REMOVED	
 	/*cout.precision(3);
 	cout << "Printing Image:" << endl;
 	for (int i = 0; i < row; i++)
@@ -109,6 +115,6 @@ void ImLoader::DisplayFloat(vector<vector<double>>& fImage, string s)
 {
 	Float2D f2d(fImage);
 	double** fMat = f2d.get();
-	Mat image = Mat(fImage.size(), fImage[0].size(), CV_32FC1, fMat);
+	Mat image = Mat(fImage.size(), fImage[0].size(), CV_64F, fMat);
 	Utilities::DisplayMat(image, s);	
 }

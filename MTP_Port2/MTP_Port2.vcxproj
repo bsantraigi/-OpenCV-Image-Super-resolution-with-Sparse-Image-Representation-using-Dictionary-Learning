@@ -148,6 +148,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DLConfig.cpp" />
+    <ClCompile Include="DLLayer.cpp" />
     <ClCompile Include="Float2D.cpp" />
     <ClCompile Include="ImLoader.cpp" />
     <ClCompile Include="MainS.cpp" />
@@ -156,6 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommonHeader.h" />
+    <ClInclude Include="DLConfig.h" />
+    <ClInclude Include="DLLayer.h" />
     <ClInclude Include="Float2D.h" />
     <ClInclude Include="ImLoader.h" />
     <ClInclude Include="Timer.h" />

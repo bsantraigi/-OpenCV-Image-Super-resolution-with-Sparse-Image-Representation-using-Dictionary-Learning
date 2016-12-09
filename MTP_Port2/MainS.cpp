@@ -7,7 +7,7 @@ Timer timer;
 
 int main( int argc, char** argv )
 {	
-	ImLoader imloader(8, 4);
+	ImLoader imloader(64, 16);
 	//Mat image = imloader.LoadImage(1, 32);
 	//Utilities::DisplayMat(image);
 
@@ -15,12 +15,12 @@ int main( int argc, char** argv )
 	imloader.UnPatchImage(fMat, 0);
 
 	// My code
-	timer.start();
+	/*timer.start();
 
 	DLConfig config1;
 	DLLayer layer1(fMat, config1);
 
-	timer.stop();
+	timer.stop();*/
 	
     waitKey(0); // Wait for a keystroke in the window
     return 0;

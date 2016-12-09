@@ -97,7 +97,7 @@ int ImLoader::PatchImage(MatrixXd &dataMatrix, int from, Mat& image)
 	}
 
 	//ECHO HERE - TOBE REMOVED	
-	cout.precision(3);
+	/*cout.precision(3);
 	cout << "Printing Image:" << endl;
 	for (int i = 0; i < row; i++)
 	{
@@ -113,7 +113,7 @@ int ImLoader::PatchImage(MatrixXd &dataMatrix, int from, Mat& image)
 			cout << dataMatrix(i,c) << fixed << " ";
 		}
 		cout << endl;
-	}
+	}*/
 	
 	return from;
 }
@@ -158,14 +158,11 @@ void ImLoader::DisplayFloat(MatrixXd& fImage, string s)
 {
 	Float2D f2d(fImage);
 	double** fMat = f2d.get();
-	Mat image(fImage.rows(), fImage.cols(), CV_64FC1, fMat);
-	image.data = (uchar *)fMat;
+	Mat image(fImage.rows(), fImage.cols(), CV_64FC1);
 	for (int i = 0; i < image.rows; i++) {
 		for (int j = 0; j < image.cols; j++) {
 			image.at<double>(i, j) = fImage(i, j);
-			cout << image.at<double>(i, j) << fixed << " ";
 		}
-		cout << endl;
 	}
 	//Utilities::DisplayMat(image, s);
 	namedWindow("Display");

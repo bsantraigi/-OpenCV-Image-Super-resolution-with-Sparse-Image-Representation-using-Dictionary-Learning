@@ -1,5 +1,5 @@
 #include "CommonHeader.h"
-#define ck(s) std::cout<<s<<endl
+#define ck(s) std::cout << s << endl
 using namespace cv;
 using namespace std;
 
@@ -7,11 +7,12 @@ Timer timer;
 
 int main( int argc, char** argv )
 {	
-	ImLoader imloader(16, 4);
+	ImLoader imloader(64, 4);
 	//Mat image = imloader.LoadImage(1, 32);
 	//Utilities::DisplayMat(image);
 
-	vector<vector<double>> fMat = imloader.GetDataMatrix();	
+	MatrixXd fMat = imloader.GetDataMatrix();
+	imloader.UnPatchImage(fMat, 0);
 
 	// My code
 	timer.start();
@@ -19,7 +20,7 @@ int main( int argc, char** argv )
 	DLConfig config1;
 	DLLayer layer1(fMat, config1);
 
-	timer.stop();	
+	timer.stop();
 	
     waitKey(0); // Wait for a keystroke in the window
     return 0;

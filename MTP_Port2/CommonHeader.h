@@ -5,6 +5,10 @@
 #include <iostream>
 #include <fstream>
 
+#include <Eigen/Dense>
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
+
 #include "Timer.h"
 #include "ImLoader.h"
 #include "Float2D.h"

@@ -1,1 +1,1 @@
-"../x64/Release/MTP_Port2.exe" > rfiles/out.txt
+"../x64/Debug/MTP_Port2.exe" > rfiles/out.txt

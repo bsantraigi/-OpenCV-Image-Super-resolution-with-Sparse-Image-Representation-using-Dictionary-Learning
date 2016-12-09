@@ -11,7 +11,7 @@ int main( int argc, char** argv )
 	//Mat image = imloader.LoadImage(1, 32);
 	//Utilities::DisplayMat(image);
 
-	MatrixXd fMat = imloader.GetDataMatrix();
+	MatrixXd fMat = imloader.GetDataMatrix(3);
 	imloader.UnPatchImage(fMat, 0);
 
 	// My code

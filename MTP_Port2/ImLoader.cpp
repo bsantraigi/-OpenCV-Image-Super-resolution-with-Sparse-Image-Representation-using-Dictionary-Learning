@@ -29,22 +29,25 @@ MatrixXd ImLoader::GetDataMatrix(int totalImg2Data)
 	int dataMatSize = 0;
 	imLocations.push_back(0);
 	for (int i = 0; i < flist.size(); i += (flist.size() - 1) / (totalImg2Data - 1)) {
+		cout << "Patching: " << flist[i] << endl;
 		indices[i] = LoadImage(flist[i], reduceTo);
 		dataMatSize += (indices[i].rows - patchSize + 1)*(indices[i].cols - patchSize + 1);
 		imLocations.push_back(dataMatSize);
 		rowList.push_back(indices[i].rows);
 		colList.push_back(indices[i].cols);
+		if (totalImg2Data <= 1){
+			break;
+		}
+		Utilities::DisplayMat(indices[i], flist[i]);
 	}
 	// Call loadimage with each id
 
 	// prepare and return datamatrix or Y
 	MatrixXd dataMatrix(patchSize*patchSize, dataMatSize);
-	cout << "Calculated Datasize:" << dataMatSize <<", patchsize: " << patchSize << endl;
 	int from = 0;
 	for(map<int, Mat>::iterator it = indices.begin(); it != indices.end(); it++)
 	{
 		from = PatchImage(dataMatrix, from, it->second);
-		cout << "From: " << from << endl;
 	}
 	DisplayFloat(dataMatrix, "DataMat");
 	return dataMatrix;
@@ -60,7 +63,7 @@ Mat ImLoader::LoadImage(int id, int reduceTo)
 }
 Mat ImLoader::LoadImage(string fpath, int reduceTo) 
 {
-	Mat image = imread(fpath, IMREAD_COLOR); // Read the file
+	Mat image = imread(fpath, IMREAD_GRAYSCALE); // Read the file
 
 	if (image.empty()) // Check for invalid input
 	{
@@ -89,7 +92,7 @@ int ImLoader::PatchImage(MatrixXd &dataMatrix, int from, Mat& image)
 			{
 				for (int v = 0; v < patchSize; v++)
 				{
-					dataMatrix(u*patchSize + v, from) = (double)image.ptr(i + v)[j + u]/255.0f;
+					dataMatrix(u*patchSize + v, from) = (double)image.ptr(i + u)[j + v]/255.0f;
 				}
 			}
 			from++;
@@ -107,6 +110,7 @@ int ImLoader::PatchImage(MatrixXd &dataMatrix, int from, Mat& image)
 		}
 		cout << endl;
 	}
+	Utilities::DisplayMat(image, "Original");
 	cout << "Printing Data mat:" << endl;
 	for (int i = 0; i < patchSize*patchSize; i++) {
 		for (int c = start; c < from; c++) {
@@ -128,14 +132,13 @@ void ImLoader::UnPatchImage(MatrixXd &dataMatrix, int id)
 	int finish = imLocations[id]; // interval is [start, finish), finish is excluded
 	int row = rowList[id - 1];
 	int col = colList[id - 1];
-	Float2D reconF(row, col);
+	MatrixXd reconF(row, col);
 	for (int dcol = start, i = 0, j = 0; dcol < finish; dcol += 1) {
 		for (int u = 0; u < patchSize; u++)
 		{
 			for (int v = 0; v < patchSize; v++)
 			{
-				//image.ptr(i + v)[j + u] / 255.0f;
-				reconF(i + v, j + u) = dataMatrix(u*patchSize + v, dcol);
+				reconF(i + u, j + v) = dataMatrix(u*patchSize + v, dcol);
 			}
 		}
 		j += 1;
@@ -156,22 +159,23 @@ void ImLoader::UnPatchImage(MatrixXd &dataMatrix, int id)
 
 void ImLoader::DisplayFloat(MatrixXd& fImage, string s)
 {
-	Float2D f2d(fImage);
-	double** fMat = f2d.get();
 	Mat image(fImage.rows(), fImage.cols(), CV_64FC1);
 	for (int i = 0; i < image.rows; i++) {
 		for (int j = 0; j < image.cols; j++) {
 			image.at<double>(i, j) = fImage(i, j);
 		}
 	}
-	//Utilities::DisplayMat(image, s);
-	namedWindow("Display");
-	imshow("Display", image);
+	Utilities::DisplayMat(image, s);
 }
 
 void ImLoader::DisplayFloat(Float2D& f2d, string s)
 {
 	double** fMat = f2d.get();
-	Mat image(f2d.rows(), f2d.cols(), CV_64FC1, fMat);
+	Mat image(f2d.rows(), f2d.cols(), CV_64FC1);
+	for (int i = 0; i < image.rows; i++) {
+		for (int j = 0; j < image.cols; j++) {
+			image.at<double>(i, j) = f2d(i, j);
+		}
+	}
 	Utilities::DisplayMat(image, s);
 }

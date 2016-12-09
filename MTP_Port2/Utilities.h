@@ -10,6 +10,7 @@
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include "Float2D.h"
 
 using namespace std;
 using namespace cv;

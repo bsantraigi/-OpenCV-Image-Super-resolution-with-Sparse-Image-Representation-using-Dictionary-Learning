@@ -7,7 +7,7 @@ Timer timer;
 
 int main( int argc, char** argv )
 {	
-	ImLoader imloader(64, 4);
+	ImLoader imloader(8, 4);
 	//Mat image = imloader.LoadImage(1, 32);
 	//Utilities::DisplayMat(image);
 

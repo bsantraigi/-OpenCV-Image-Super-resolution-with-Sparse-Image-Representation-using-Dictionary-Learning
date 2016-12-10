@@ -2,3 +2,23 @@
 ***** VIDEOINPUT LIBRARY - 0.1995 - TFW07 *****
 
 Generating file list...
+Patching: D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0001.jpg
+Datamatsize: 25
+D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0001.jpg of size 8, 8
+Patching: D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0109.jpg
+Datamatsize: 50
+D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0109.jpg of size 8, 8
+Patching: D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0217.jpg
+Datamatsize: 75
+D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0217.jpg of size 8, 8
+Patching: D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0325.jpg
+Datamatsize: 100
+D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0325.jpg of size 8, 8
+Patching: D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0433.jpg
+Datamatsize: 125
+D:/ProjectData/caltech101/101_ObjectCategories/Faces_easy/image_0433.jpg of size 8, 8
+DataMat of size 16, 125
+Error of size 8, 8
+TestMat:
+0 0 0
+0 0 0

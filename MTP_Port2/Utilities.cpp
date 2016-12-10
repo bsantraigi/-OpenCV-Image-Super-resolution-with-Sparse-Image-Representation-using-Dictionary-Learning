@@ -9,6 +9,7 @@ Utilities::Utilities()
 
 void Utilities::DisplayMat(Mat &image, string s)
 {
+	cout << s << " of size " << image.rows << ", " << image.cols << endl;
 	if (s.size() == 0) {
 		namedWindow("Display window", WINDOW_AUTOSIZE); // Create a window for display.
 		imshow("Display window", image); // Show our image inside it.

@@ -151,8 +151,10 @@
     <ClCompile Include="DLConfig.cpp" />
     <ClCompile Include="DLLayer.cpp" />
     <ClCompile Include="Float2D.cpp" />
+    <ClCompile Include="Gamrnd.cpp" />
     <ClCompile Include="ImLoader.cpp" />
     <ClCompile Include="MainS.cpp" />
+    <ClCompile Include="Mvnrnd.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
@@ -161,7 +163,9 @@
     <ClInclude Include="DLConfig.h" />
     <ClInclude Include="DLLayer.h" />
     <ClInclude Include="Float2D.h" />
+    <ClInclude Include="Gamrnd.h" />
     <ClInclude Include="ImLoader.h" />
+    <ClInclude Include="Mvnrnd.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utilities.h" />
   </ItemGroup>

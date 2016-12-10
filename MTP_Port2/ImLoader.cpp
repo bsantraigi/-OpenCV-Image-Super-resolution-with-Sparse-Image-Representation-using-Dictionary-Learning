@@ -31,7 +31,10 @@ MatrixXd ImLoader::GetDataMatrix(int totalImg2Data)
 	for (int i = 0; i < flist.size(); i += (flist.size() - 1) / (totalImg2Data - 1)) {
 		cout << "Patching: " << flist[i] << endl;
 		indices[i] = LoadImage(flist[i], reduceTo);
+		
 		dataMatSize += (indices[i].rows - patchSize + 1)*(indices[i].cols - patchSize + 1);
+		cout << "Datamatsize: " << dataMatSize << endl;
+		
 		imLocations.push_back(dataMatSize);
 		rowList.push_back(indices[i].rows);
 		colList.push_back(indices[i].cols);
@@ -154,7 +157,7 @@ void ImLoader::UnPatchImage(MatrixXd &dataMatrix, int id)
 		}
 		cout << endl;
 	}*/
-	DisplayFloat(reconF);
+	DisplayFloat(reconF, "Error");
 }
 
 void ImLoader::DisplayFloat(MatrixXd& fImage, string s)

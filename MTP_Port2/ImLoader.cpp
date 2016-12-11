@@ -41,7 +41,9 @@ MatrixXd ImLoader::GetDataMatrix(int totalImg2Data)
 		if (totalImg2Data <= 1){
 			break;
 		}
-		Utilities::DisplayMat(indices[i], flist[i]);
+		if (i == 0){
+			Utilities::DisplayMat(indices[i], flist[i]);
+		}
 	}
 	// Call loadimage with each id
 
@@ -127,9 +129,11 @@ int ImLoader::PatchImage(MatrixXd &dataMatrix, int from, Mat& image)
 
 void ImLoader::UnPatchImage(MatrixXd &dataMatrix, int id)
 {
+	cout << "Unpatching image #" << id << endl;
 	id = id + 1; /// convert to 1-indexd form
 	if (id > imLocations.size()) {
-		throw new Exception();
+		cout << "ERROR[ImLoader:UnPatchImage]Image id out of bounds" << endl;
+		return;
 	}
 	int start = imLocations[id - 1];
 	int finish = imLocations[id]; // interval is [start, finish), finish is excluded
@@ -157,7 +161,7 @@ void ImLoader::UnPatchImage(MatrixXd &dataMatrix, int id)
 		}
 		cout << endl;
 	}*/
-	DisplayFloat(reconF, "Error");
+	//DisplayFloat(reconF, "Error");
 }
 
 void ImLoader::DisplayFloat(MatrixXd& fImage, string s)

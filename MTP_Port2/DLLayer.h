@@ -9,6 +9,8 @@
 #include "Float2D.h"
 #include "Gamrnd.h"
 #include "Mvnrnd.h"
+#include "Betarnd.h"
+#include "Binornd.h"
 
 using namespace std;
 
@@ -23,7 +25,6 @@ class DLLayer
 	// Float2D lives and dies with this class : for any external
 	// access return 2D vector
 
-	// TODO: Handle desctruction of Float2D
 	MatrixXd Y, D, S, post_PI;
 	MatrixXb B;
 	VectorXd PI, bias;
@@ -32,11 +33,23 @@ class DLLayer
 
 	default_random_engine generator;
 	gamma_distribution<double> gdist;
+	bool trained = false;
 private:
-	void Init();
+	void Init(MatrixXd& fMat, DLConfig config);
 public:
-	DLLayer();
+	// Ctor and Dtor
 	DLLayer(MatrixXd &fMat, DLConfig config);	
 	~DLLayer();
+
+	//Getter
+	bool IsTrained(){ return trained; }
+
+	/*
+	Function: RunGibbs
+	Starts Gibbs sampling algorithm for this layer
+	*/
+	void RunGibbs(int iters);
+	void CompleteSampler();
+	
 };
 

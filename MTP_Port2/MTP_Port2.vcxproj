@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Betarnd.cpp" />
     <ClCompile Include="DLConfig.cpp" />
     <ClCompile Include="DLLayer.cpp" />
     <ClCompile Include="Float2D.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Betarnd.h" />
     <ClInclude Include="CommonHeader.h" />
     <ClInclude Include="DLConfig.h" />
     <ClInclude Include="DLLayer.h" />

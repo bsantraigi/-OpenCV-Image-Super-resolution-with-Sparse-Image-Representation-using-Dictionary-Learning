@@ -42,6 +42,9 @@
     <ClCompile Include="Mvnrnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Betarnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImLoader.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mvnrnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Betarnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

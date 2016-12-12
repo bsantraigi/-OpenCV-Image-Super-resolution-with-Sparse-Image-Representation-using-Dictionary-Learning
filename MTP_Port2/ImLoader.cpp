@@ -8,7 +8,6 @@ ImLoader::ImLoader(int reduceTo, int patchSize,  string folder, string path) : f
 {
 	this->folder = folder;
 	this->path = path + folder;
-	this->patchSize = 8;
 	this->reduceTo = reduceTo;
 	redSize = Size(reduceTo, reduceTo);
 	this->patchSize = patchSize;
@@ -29,11 +28,11 @@ MatrixXd ImLoader::GetDataMatrix(int totalImg2Data)
 	int dataMatSize = 0;
 	imLocations.push_back(0);
 	for (int i = 0; i < flist.size(); i += (flist.size() - 1) / (totalImg2Data - 1)) {
-		cout << "Patching: " << flist[i] << endl;
+		//cout << "Patching: " << flist[i] << endl;
 		indices[i] = LoadImage(flist[i], reduceTo);
 		
 		dataMatSize += (indices[i].rows - patchSize + 1)*(indices[i].cols - patchSize + 1);
-		cout << "Datamatsize: " << dataMatSize << endl;
+		//cout << "Datamatsize: " << dataMatSize << endl;
 		
 		imLocations.push_back(dataMatSize);
 		rowList.push_back(indices[i].rows);
@@ -41,9 +40,9 @@ MatrixXd ImLoader::GetDataMatrix(int totalImg2Data)
 		if (totalImg2Data <= 1){
 			break;
 		}
-		if (i == 0){
+		/*if (i == 0){
 			Utilities::DisplayMat(indices[i], flist[i]);
-		}
+		}*/
 	}
 	// Call loadimage with each id
 
@@ -54,7 +53,7 @@ MatrixXd ImLoader::GetDataMatrix(int totalImg2Data)
 	{
 		from = PatchImage(dataMatrix, from, it->second);
 	}
-	DisplayFloat(dataMatrix, "DataMat");
+	//DisplayFloat(dataMatrix, "DataMat");
 	return dataMatrix;
 }
 

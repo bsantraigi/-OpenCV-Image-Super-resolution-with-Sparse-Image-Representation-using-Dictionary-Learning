@@ -15,5 +15,11 @@ void Timer::start() {
 void Timer::stop() {
 	t2 = high_resolution_clock::now();
 	auto duration = duration_cast<microseconds>(t2 - t1).count();
-	cout << "Time Elapsed: " << duration << endl;;
+	cout << "Time Elapsed: " << duration << " us" << endl;;
+}
+
+void Timer::stop(int iter) {
+	t2 = high_resolution_clock::now();
+	auto duration = duration_cast<microseconds>(t2 - t1).count();
+	cout << "Time Elapsed(per iter): " << (double)duration / iter << " us" << endl;;
 }

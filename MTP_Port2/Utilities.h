@@ -25,6 +25,8 @@ public:
 	//static vector<string> GetAllFiles(string folder);
 	static void DisplayMat(Mat& image, string s="");
 	static vector<string> GetAllFiles(string imageCategory);
+	static void prettyStart(string s);
+	static void prettyEnd(string s);
 	~Utilities();
 };
 

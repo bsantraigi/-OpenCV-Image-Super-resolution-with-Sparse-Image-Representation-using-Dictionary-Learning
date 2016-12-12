@@ -2,28 +2,35 @@
 
 DLLayer::DLLayer(MatrixXd& fMat, DLConfig config)
 {
-	Init(fMat, config);
+	// Copy the data, config arugments to class variables
+	Y = fMat;
+
+	this->config = DLConfig(config);
+
+	// Call Init
+	Init();
 }
 
 DLLayer::~DLLayer()
 {
 }
 
-void DLLayer::Init(MatrixXd& fMat, DLConfig config){
-	M = (fMat.rows());
-	N = (fMat.cols());
+void DLLayer::Init(){
+	Utilities::prettyStart("Layer Initialization STARTING");
+	
+	layerTimer.start();
+	M = (Y.rows());
+	N = (Y.cols());
 	K = (config.K);
 
 	D = (MatrixXd(M, K));
 	S = (MatrixXd(K, N));
 
-	B = (MatrixXb(K, N));
-	PI = (VectorXd(K));
-	Y = (MatrixXd(M, N));
+	B = (MatrixXi(K, N));
+	PI = (VectorXd(K));	
 
 	post_PI = MatrixXd(K, N);
-
-	Y << fMat;
+	
 	gam_d = Gamrnd::get(config.a_d, config.b_d);
 	gam_s = Gamrnd::get(config.a_s, config.b_s);
 	gam_n = Gamrnd::get(config.a_n, config.b_n);
@@ -58,36 +65,28 @@ void DLLayer::Init(MatrixXd& fMat, DLConfig config){
 	{
 		post_PI.col(i) << PI;
 	}
-
-	cout << "** Layer initialization complete **" << endl;
-}
-
-void DLLayer::CompleteSampler()
-{
-	// Sample PI
-	// Sample B
-	// Sample Gammas
-
-	// If sampleD ==  true
-	// Sample D
-
-	// Sample S
-	// Sample Bias
+	layerTimer.stop();
+	Utilities::prettyEnd("Layer Initialization COMPLETE");
 }
 
 void DLLayer::RunGibbs(int iters)
 {
-	int burn_ins = min(10, (int)iters/2);
-	int c_iter;
-	for (c_iter = 0; c_iter < burn_ins; c_iter++)
+	Utilities::prettyStart("Gibbs Sampling STARTING");
+
+	int burn_ins = min(10, (int)iters / 2);
+
+	for (; c_iter < burn_ins; c_iter++)
 	{
+		layerTimer.start();
 		CompleteSampler();
+		layerTimer.stop();
 	}
 
 	cout << "** Burn_ins complete **" << endl;
 
 	for (; c_iter < iters; c_iter++)
 	{
+		layerTimer.start();
 		/*
 		If debugging
 		display "Y_approx"
@@ -98,8 +97,81 @@ void DLLayer::RunGibbs(int iters)
 		// Calculate MSE
 
 		CompleteSampler();
+
+		layerTimer.stop();
 	}
 
 	trained = true;
-	cout << "** All Gibbs iterations complete **" << endl;
+	Utilities::prettyEnd("Gibbs Sampling COMPLETE");
+}
+
+void DLLayer::CompleteSampler()
+{
+	// Sample PI
+	SamplePI();
+
+	// Sample B
+	// Sample Gammas
+
+	// If sampleD ==  true
+	// Sample D
+
+	// Sample S
+	SampleS();
+
+	// Sample Bias
+}
+
+void DLLayer::SamplePI()
+{
+	for (int k = 0; k < K; k++)
+	{
+		double s = B.row(k).sum();
+		PI(k) = Betarnd::get(config.a_pi + s, config.b_pi + N - s);
+	}
+}
+void DLLayer::SampleB()
+{
+
+}
+void DLLayer::SampleGammas()
+{
+
+}
+void DLLayer::SampleD()
+{
+	MatrixXd SB = S.cwiseProduct(B);
+	for (int k = 0; k < K; k++)
+	{
+
+	}
+}
+void DLLayer::SampleS()
+{
+	MatrixXd Ik = MatrixXd::Identity(K, K);
+	for (int i = 0; i < N; i++)
+	{
+		MatrixXd DB(M, K);
+		for (int m = 0; m < M; m++)
+		{
+			for (int k = 0; k < K; k++)
+			{
+				DB(m, k) = D(m, k) * B(k, i);
+			}
+		}
+		MatrixXd DBt = DB.transpose();
+		MatrixXd C = gam_n*(DBt*DB);
+		for (int k = 0; k < K; k++)
+		{
+			C(k, k) += gam_s;
+		}
+		C = C.inverse();
+
+		VectorXd muSi = C*(gam_n*DBt*(Y.col(i) - bias));
+		S.col(i) = Mvnrnd::get(muSi, C);
+	}
+}
+void DLLayer::SampleBias()
+{
+
 }

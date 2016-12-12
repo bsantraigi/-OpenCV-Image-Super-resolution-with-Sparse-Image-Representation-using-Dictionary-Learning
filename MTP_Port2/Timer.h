@@ -13,6 +13,7 @@ public:
 	Timer();
 	void start();
 	void stop();
+	void stop(int iter);
 	~Timer();
 };
 

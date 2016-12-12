@@ -53,6 +53,18 @@ vector<string> Utilities::GetAllFiles(string imageCategory)
 	return groupedImages[imageCategory];	
 }
 
+void Utilities::prettyStart(string s)
+{
+	cout << endl << "***************************************" << endl;
+	cout << "\t" << s << endl;
+	cout << "***************************************" << endl << endl;
+}
+void Utilities::prettyEnd(string s)
+{
+	cout << endl << "=======================================" << endl;
+	cout << "\t" << s << endl;
+	cout << "=======================================" << endl << endl;
+}
 
 Utilities::~Utilities()
 {

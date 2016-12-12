@@ -11,6 +11,8 @@
 #include "Mvnrnd.h"
 #include "Betarnd.h"
 #include "Binornd.h"
+#include "Timer.h"
+#include "Utilities.h"
 
 using namespace std;
 
@@ -18,7 +20,7 @@ using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using Eigen::MatrixXi;
-typedef Eigen::Matrix<bool, -1, -1> MatrixXb;
+//typedef Eigen::Matrix<bool, -1, -1> MatrixXb;
 
 class DLLayer
 {
@@ -26,16 +28,19 @@ class DLLayer
 	// access return 2D vector
 
 	MatrixXd Y, D, S, post_PI;
-	MatrixXb B;
+	MatrixXi B;
 	VectorXd PI, bias;
+	DLConfig config;
 	int M, N, K;
 	double gam_d, gam_s, gam_n, gam_bias;
 
 	default_random_engine generator;
 	gamma_distribution<double> gdist;
 	bool trained = false;
+	int c_iter = 0;
+	Timer layerTimer;
 private:
-	void Init(MatrixXd& fMat, DLConfig config);
+	void Init();
 public:
 	// Ctor and Dtor
 	DLLayer(MatrixXd &fMat, DLConfig config);	
@@ -47,9 +52,18 @@ public:
 	/*
 	Function: RunGibbs
 	Starts Gibbs sampling algorithm for this layer
+	Starts or continues paused Gibbs Sampling
 	*/
 	void RunGibbs(int iters);
 	void CompleteSampler();
+
+	// Samplers for individual r.v s
+	void SamplePI();
+	void SampleB();
+	void SampleGammas();
+	void SampleD();
+	void SampleS();
+	void SampleBias();
 	
 };
 

@@ -9,11 +9,11 @@ typedef Eigen::Matrix<bool, -1, -1> MatrixXb;
 
 int main( int argc, char** argv )
 {	
-	ImLoader imloader(128, 8);
+	ImLoader imloader(32, 4);
 	//Mat image = imloader.LoadImage(1, 32);
 	//Utilities::DisplayMat(image);
 
-	MatrixXd fMat = imloader.GetDataMatrix(2);
+	MatrixXd fMat = imloader.GetDataMatrix(10);
 	//imloader.UnPatchImage(fMat, 0);
 
 	MatrixXd a = MatrixXd::Zero(2, 3);

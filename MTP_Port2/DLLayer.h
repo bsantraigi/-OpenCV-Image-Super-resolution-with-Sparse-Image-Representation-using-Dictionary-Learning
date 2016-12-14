@@ -57,6 +57,8 @@ public:
 	void RunGibbs(int iters);
 	void CompleteSampler();
 
+	void GetSB(MatrixXd& SB);
+
 	// Samplers for individual r.v s
 	void SamplePI();
 	void SampleB();

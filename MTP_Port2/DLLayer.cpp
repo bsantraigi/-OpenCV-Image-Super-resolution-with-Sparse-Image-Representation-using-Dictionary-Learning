@@ -15,6 +15,17 @@ DLLayer::~DLLayer()
 {
 }
 
+void DLLayer::GetSB(MatrixXd& SB)
+{
+	for (int k = 0; k < K; k++)
+	{
+		for (int i = 0; i < N; i++)
+		{
+			SB(k, i) = S(k, i)*B(k, i);
+		}
+	}
+}
+
 void DLLayer::Init(){
 	Utilities::prettyStart("Layer Initialization STARTING");
 	
@@ -111,15 +122,20 @@ void DLLayer::CompleteSampler()
 	SamplePI();
 
 	// Sample B
+	SampleB();
+
 	// Sample Gammas
+	SampleGammas();
 
 	// If sampleD ==  true
 	// Sample D
+	SampleD();
 
 	// Sample S
 	SampleS();
 
 	// Sample Bias
+	SampleBias();
 }
 
 void DLLayer::SamplePI()
@@ -132,18 +148,89 @@ void DLLayer::SamplePI()
 }
 void DLLayer::SampleB()
 {
+	MatrixXd SB(K, N);
+	GetSB(SB);
+	for (int i = 0; i < N; i++)
+	{
+		VectorXd SBi = SB.col(i);
+		for (int k = 0; k < K; k++)
+		{
+			B(k, i) = 1;
+			VectorXd delY;
+			if (k > 0){
+				delY = Y.col(i) - bias - D.leftCols(k - 1)*SBi.topRows(k - 1);
+			}
+			else{
+				delY = VectorXd::Zero(M);
+			}
+			if (k != K - 1){
+				delY = delY - D.rightCols(K - k - 1)*SBi.bottomRows(K - k - 1);
+			}
+			double dkn2 = D.col(k).norm();
+			double arg = (S(k, i) * S(k, i))*dkn2*dkn2 - 2 * S(k, i)*(D.col(k).dot(delY));
+			double p1 = PI(k) *exp(-gam_n*arg / 2);
 
+			B(k, i) = 0;
+			double p0 = (1 - PI(k));
+			p1 = p1 / (p1 + p0);
+			B(k, i) = Binornd::get(p1);
+			post_PI(k, i) = p1;
+		}
+	}
 }
 void DLLayer::SampleGammas()
 {
+	double alpha, beta, tau;
 
+	// Sample gam_d
+	alpha = K*M / 2 + config.a_d;
+	tau = D.norm();
+	beta = 0.5*tau*tau + config.b_d;
+	gam_d = Gamrnd::get(alpha, beta);
+
+	// Sample gam_s	
+	alpha = K*N / 2 + config.a_s;
+	tau = S.norm();
+	beta = 0.5*tau*tau + config.b_s;
+	gam_s = Gamrnd::get(alpha, beta);
+	
+	// Sample gam_n
+	alpha = M*N / 2 + config.a_n;
+	MatrixXd SB(K, N);
+	GetSB(SB);
+	tau = (Y - D*SB - bias.replicate(1, N)).norm();
+	beta = 0.5*tau*tau + config.b_n;
+	gam_n = Gamrnd::get(alpha, beta);
+	
+	// Sample gam_bias
+	alpha = M / 2 + config.a_bias;
+	tau = bias.norm();
+	beta = 0.5*tau*tau + config.b_bias;
+	gam_bias = Gamrnd::get(alpha, beta);
 }
 void DLLayer::SampleD()
 {
-	MatrixXd SB = S.cwiseProduct(B);
+	MatrixXd SB(K, N);
+	GetSB(SB);
+	MatrixXd biasM = bias.replicate(1, N);
 	for (int k = 0; k < K; k++)
 	{
+		MatrixXd Y_approx;
+		if (k > 0){
+			Y_approx = D.leftCols(k - 1)*SB.topRows(k - 1) + biasM;
+		}
+		else{
+			Y_approx = MatrixXd::Zero(M, N);
+		}
+		if (k != K - 1){
+			Y_approx = Y_approx + D.rightCols(K - k - 1)*SB.bottomRows(K - k - 1) + biasM;
+		}
+		MatrixXd delY = Y - Y_approx;
 
+		double sk2 = SB.row(k).norm();
+		double prk = gam_n * sk2 * sk2 + gam_d;
+		VectorXd muDk = (gam_n / prk)*(delY*SB.row(k).transpose());
+		D.col(k) << Mvnrnd::get(muDk, (1 / prk)*MatrixXd::Identity(M, M));
 	}
 }
 void DLLayer::SampleS()
@@ -173,5 +260,10 @@ void DLLayer::SampleS()
 }
 void DLLayer::SampleBias()
 {
+	double G = N*gam_n + gam_bias;
+	MatrixXd SB(K, N);
+	GetSB(SB);
 
+	VectorXd mu = (gam_n / G)*((Y - D*SB).rowwise().sum());
+	bias << Mvnrnd::get(mu, (1 / G)*MatrixXd::Identity(M, M));
 }

@@ -58,6 +58,7 @@ public:
 	void CompleteSampler();
 	void GetSB(MatrixXd& SB);
 	MatrixXd GetY_approx();
+	double MSE();
 
 	// Samplers for individual r.v s
 	void SamplePI();

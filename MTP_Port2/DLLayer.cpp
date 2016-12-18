@@ -26,6 +26,14 @@ void DLLayer::GetSB(MatrixXd& SB)
 	}
 }
 
+MatrixXd DLLayer::GetY_approx()
+{
+	MatrixXd SB(K, N);
+	GetSB(SB);
+	MatrixXd biasM = bias.replicate(1, N);
+	return D*SB + biasM;
+}
+
 void DLLayer::Init(){
 	Utilities::prettyStart("Layer Initialization STARTING");
 	
@@ -98,13 +106,6 @@ void DLLayer::RunGibbs(int iters)
 	for (; c_iter < iters; c_iter++)
 	{
 		layerTimer.start();
-		/*
-		If debugging
-		display "Y_approx"
-		*/
-
-		// Y_approx = ??
-
 		// Calculate MSE
 
 		CompleteSampler();

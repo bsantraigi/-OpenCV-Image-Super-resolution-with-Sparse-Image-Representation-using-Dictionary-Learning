@@ -7,20 +7,21 @@ Timer timer;
 
 int main()
 {	
-	ImLoader imloader(16, 4);
-	//Mat image = imloader.LoadImage(1, 32);
-	//Utilities::DisplayMat(image);
-
-	MatrixXd fMat = imloader.GetDataMatrix(10);
+	ImLoader imloader(256, 8);
+	MatrixXd fMat = imloader.GetDataMatrix(5);
 	
 
 	DLConfig config1;
 	DLLayer layer1(fMat, config1);
-	layer1.RunGibbs(15);
+	layer1.RunGibbs(30);
 
 	MatrixXd Y_approx = layer1.GetY_approx();
 	imloader.UnPatchImage(fMat, 0);
 	imloader.UnPatchImage(Y_approx, 0);
+	imloader.UnPatchImage(fMat, 1);
+	imloader.UnPatchImage(Y_approx, 1);
+	imloader.UnPatchImage(fMat, 2);
+	imloader.UnPatchImage(Y_approx, 2);
 	
     waitKey(0); // Wait for a keystroke in the window
     return 0;

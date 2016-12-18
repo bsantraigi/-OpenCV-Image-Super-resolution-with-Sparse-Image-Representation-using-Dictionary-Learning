@@ -151,7 +151,7 @@ void DLLayer::CompleteSampler()
 	SampleBias();
 	layerTimer.stop(tbias);
 
-	printf("%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\tMSE:%0.2f\n", tpi/1000, tb/1000, tgam/1000, td/1000, ts/1000, tbias/1000, MSE());
+	printf("%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\tMSE:%0.5f\n", tpi/1000, tb/1000, tgam/1000, td/1000, ts/1000, tbias/1000, MSE());
 }
 
 void DLLayer::SamplePI()

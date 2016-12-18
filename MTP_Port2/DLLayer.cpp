@@ -96,21 +96,15 @@ void DLLayer::RunGibbs(int iters)
 
 	for (; c_iter < burn_ins; c_iter++)
 	{
-		layerTimer.start();
 		CompleteSampler();
-		layerTimer.stop();
 	}
 
 	cout << "** Burn_ins complete **" << endl;
 
 	for (; c_iter < iters; c_iter++)
 	{
-		layerTimer.start();
 		// Calculate MSE
-
 		CompleteSampler();
-
-		layerTimer.stop();
 	}
 
 	trained = true;
@@ -119,24 +113,40 @@ void DLLayer::RunGibbs(int iters)
 
 void DLLayer::CompleteSampler()
 {
+	double tpi, tb, tgam, td, ts, tbias;
+
 	// Sample PI
+	layerTimer.start();
 	SamplePI();
+	layerTimer.stop(tpi);
 
 	// Sample B
+	layerTimer.start();
 	SampleB();
+	layerTimer.stop(tb);
 
 	// Sample Gammas
+	layerTimer.start();
 	SampleGammas();
+	layerTimer.stop(tgam);
 
 	// If sampleD ==  true
 	// Sample D
+	layerTimer.start();
 	SampleD();
+	layerTimer.stop(td);
 
 	// Sample S
+	layerTimer.start();
 	SampleS();
+	layerTimer.stop(ts);
 
 	// Sample Bias
+	layerTimer.start();
 	SampleBias();
+	layerTimer.stop(tbias);
+
+	printf("%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\n", tpi/1000, tb/1000, tgam/1000, td/1000, ts/1000, tbias/1000);
 }
 
 void DLLayer::SamplePI()

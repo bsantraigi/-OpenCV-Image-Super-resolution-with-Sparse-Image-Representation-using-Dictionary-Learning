@@ -160,7 +160,9 @@ void ImLoader::UnPatchImage(MatrixXd &dataMatrix, int id)
 		}
 		cout << endl;
 	}*/
-	//DisplayFloat(reconF, "Error");
+	stringstream titleStream;
+	titleStream << "Unpatched #" << (unpId++);
+	DisplayFloat(reconF, titleStream.str());
 }
 
 void ImLoader::DisplayFloat(MatrixXd& fImage, string s)
@@ -171,7 +173,9 @@ void ImLoader::DisplayFloat(MatrixXd& fImage, string s)
 			image.at<double>(i, j) = fImage(i, j);
 		}
 	}
-	Utilities::DisplayMat(image, s);
+	Mat dimage;
+	resize(image, dimage, Size(128, 128));
+	Utilities::DisplayMat(dimage, s);
 }
 
 void ImLoader::DisplayFloat(Float2D& f2d, string s)

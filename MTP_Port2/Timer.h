@@ -14,6 +14,7 @@ public:
 	void start();
 	void stop();
 	void stop(int iter);
+	void stop(double& t);
 	~Timer();
 };
 

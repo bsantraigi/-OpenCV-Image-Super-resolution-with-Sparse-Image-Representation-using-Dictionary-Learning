@@ -25,6 +25,8 @@ public:
 	vector<int> imLocations;
 	vector<int> rowList;
 	vector<int> colList;
+
+	int unpId = 0;
 public:
 	ImLoader();
 	ImLoader(int reduceTo = 16, int patchSize = 8, string folder = "Faces_easy",

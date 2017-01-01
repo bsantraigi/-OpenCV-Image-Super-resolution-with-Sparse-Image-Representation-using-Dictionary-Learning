@@ -1,5 +1,9 @@
 #include "DLLayer.h"
 
+DLLayer::DLLayer()
+{
+}
+
 DLLayer::DLLayer(MatrixXd& fMat, DLConfig config)
 {
 	// Copy the data, config arugments to class variables
@@ -13,6 +17,11 @@ DLLayer::DLLayer(MatrixXd& fMat, DLConfig config)
 
 DLLayer::~DLLayer()
 {
+}
+
+void DLLayer::Break()
+{
+	toBreak = true;
 }
 
 void DLLayer::GetSB(MatrixXd& SB)
@@ -98,21 +107,33 @@ void DLLayer::RunGibbs(int iters)
 	Utilities::prettyStart("Gibbs Sampling STARTING");
 
 	int burn_ins = min(10, (int)iters / 2);
-
-	for (; c_iter < burn_ins; c_iter++)
-	{
-		CompleteSampler();
+	
+	printf("PI\tB\tGAM\tD\tS\tBIAS\tTotal\tMSE\n");
+	if (!toBreak){
+		for (; c_iter < burn_ins; c_iter++)
+		{
+			CompleteSampler();
+			if (toBreak){
+				break;
+			}
+		}
 	}
 
 	cout << "** Burn_ins complete **" << endl;
 
-	for (; c_iter < iters; c_iter++)
-	{
-		// Calculate MSE
-		CompleteSampler();
+	if (!toBreak){
+		for (; c_iter < iters; c_iter++)
+		{
+			// Calculate MSE
+			CompleteSampler();
+			if (toBreak){
+				break;
+			}
+		}
 	}
 
 	trained = true;
+	toBreak = false;
 	Utilities::prettyEnd("Gibbs Sampling COMPLETE");
 }
 
@@ -151,7 +172,8 @@ void DLLayer::CompleteSampler()
 	SampleBias();
 	layerTimer.stop(tbias);
 
-	printf("%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\tMSE:%0.5f\n", tpi/1000, tb/1000, tgam/1000, td/1000, ts/1000, tbias/1000, MSE());
+	printf("%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t(%0.2f)\tMSE:%0.5f\n", tpi/1000, tb/1000, tgam/1000, td/1000, ts/1000, tbias/1000, 
+		(tpi+tb+tgam+td+ts+tbias)/1e6, MSE());
 }
 
 void DLLayer::SamplePI()
@@ -252,9 +274,9 @@ void DLLayer::SampleD()
 void DLLayer::SampleS()
 {
 	MatrixXd Ik = MatrixXd::Identity(K, K);
+	MatrixXd DB(M, K);
 	for (int i = 0; i < N; i++)
-	{
-		MatrixXd DB(M, K);
+	{		
 		for (int m = 0; m < M; m++)
 		{
 			for (int k = 0; k < K; k++)

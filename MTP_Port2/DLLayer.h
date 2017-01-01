@@ -39,13 +39,16 @@ class DLLayer
 	bool trained = false;
 	int c_iter = 0;
 	Timer layerTimer;
+
+	bool toBreak = false;
 private:
 	void Init();
 public:
 	// Ctor and Dtor
+	DLLayer();
 	DLLayer(MatrixXd &fMat, DLConfig config);	
 	~DLLayer();
-
+	void Break();
 	//Getter
 	bool IsTrained(){ return trained; }
 

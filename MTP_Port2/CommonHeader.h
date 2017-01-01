@@ -4,6 +4,7 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 #include <fstream>
+#include <Windows.h>
 
 #include <Eigen/Dense>
 using Eigen::MatrixXd;

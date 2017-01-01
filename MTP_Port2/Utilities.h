@@ -12,6 +12,11 @@
 #include <unordered_set>
 #include "Float2D.h"
 
+#include <Eigen/Dense>
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
+using Eigen::MatrixXi;
+
 using namespace std;
 using namespace cv;
 
@@ -27,6 +32,14 @@ public:
 	static vector<string> GetAllFiles(string imageCategory);
 	static void prettyStart(string s);
 	static void prettyEnd(string s);
+
+	template <typename T>
+	static void DumpTo(T mat, string ofname){
+		ofstream dumpStream("savedMats/" + ofname + ".csv");
+		dumpStream << mat;
+		dumpStream.close();
+		cout << "Dumped: " << "savedMats/" << ofname << ".csv" << endl;
+	}
 	~Utilities();
 };
 

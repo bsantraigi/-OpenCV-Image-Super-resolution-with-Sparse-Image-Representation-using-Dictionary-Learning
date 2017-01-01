@@ -132,6 +132,13 @@ void DLLayer::RunGibbs(int iters)
 		}
 	}
 
+	Utilities::DumpTo(D, "DMat");
+	Utilities::DumpTo(bias, "BiasMat");
+	Utilities::DumpTo(B, "BMat");
+	Utilities::DumpTo(PI, "PIMat");
+	Utilities::DumpTo(S, "SMat");
+	Utilities::DumpTo(post_PI, "PostPiMat");
+
 	trained = true;
 	toBreak = false;
 	Utilities::prettyEnd("Gibbs Sampling COMPLETE");

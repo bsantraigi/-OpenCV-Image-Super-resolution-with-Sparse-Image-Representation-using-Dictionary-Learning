@@ -10,7 +10,7 @@ DLConfig::DLConfig()
 	a_n = b_n = 1e-1;
 
 	a_pi = 1;
-	b_pi = 800;
+	b_pi = 1200;
 }
 
 

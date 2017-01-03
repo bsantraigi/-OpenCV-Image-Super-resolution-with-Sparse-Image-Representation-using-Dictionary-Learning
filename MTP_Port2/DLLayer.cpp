@@ -35,6 +35,11 @@ void DLLayer::GetSB(MatrixXd& SB)
 	}
 }
 
+MatrixXd DLLayer::GetPostPI()
+{
+	return post_PI;
+}
+
 MatrixXd DLLayer::GetY_approx()
 {
 	MatrixXd SB(K, N);
@@ -102,8 +107,12 @@ void DLLayer::Init(){
 	Utilities::prettyEnd("Layer Initialization COMPLETE");
 }
 
-void DLLayer::RunGibbs(int iters)
+void DLLayer::RunGibbs(int iters, int layer_id)
 {
+	running = true;
+	trained = false;
+
+
 	Utilities::prettyStart("Gibbs Sampling STARTING");
 
 	int burn_ins = min(10, (int)iters / 2);
@@ -132,15 +141,41 @@ void DLLayer::RunGibbs(int iters)
 		}
 	}
 
-	Utilities::DumpTo(D, "DMat");
-	Utilities::DumpTo(bias, "BiasMat");
-	Utilities::DumpTo(B, "BMat");
-	Utilities::DumpTo(PI, "PIMat");
-	Utilities::DumpTo(S, "SMat");
-	Utilities::DumpTo(post_PI, "PostPiMat");
+	stringstream title;
+	title.str("");
+	title.clear();
+	title << "DMat_" << layer_id;
+	Utilities::DumpTo(D, title.str());
+
+	title.str("");
+	title.clear();
+	title << "BiasMat_" << layer_id;
+	Utilities::DumpTo(bias, title.str());
+
+	title.str("");
+	title.clear();
+	title << "BMat_" << layer_id;
+	Utilities::DumpTo(B, title.str());
+
+	title.str("");
+	title.clear();
+	title << "PIMat_" << layer_id;
+	Utilities::DumpTo(PI, title.str());
+
+	title.str("");
+	title.clear();
+	title << "SMat_" << layer_id;
+	Utilities::DumpTo(S, title.str());
+
+	title.str("");
+	title.clear();
+	title << "PostPiMat_" << layer_id;
+	Utilities::DumpTo(post_PI, title.str());
 
 	trained = true;
+	running = false;
 	toBreak = false;
+
 	Utilities::prettyEnd("Gibbs Sampling COMPLETE");
 }
 

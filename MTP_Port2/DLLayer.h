@@ -36,13 +36,15 @@ class DLLayer
 
 	default_random_engine generator;
 	gamma_distribution<double> gdist;
-	bool trained = false;
 	int c_iter = 0;
 	Timer layerTimer;
 
 	bool toBreak = false;
-private:
+
 	void Init();
+
+public:
+	bool trained = false, running = false;
 public:
 	// Ctor and Dtor
 	DLLayer();
@@ -57,10 +59,13 @@ public:
 	Starts Gibbs sampling algorithm for this layer
 	Starts or continues paused Gibbs Sampling
 	*/
-	void RunGibbs(int iters);
+	void RunGibbs(int iters, int layer_id);
 	void CompleteSampler();
+
 	void GetSB(MatrixXd& SB);
 	MatrixXd GetY_approx();
+	MatrixXd GetPostPI();
+
 	double MSE();
 
 	// Samplers for individual r.v s

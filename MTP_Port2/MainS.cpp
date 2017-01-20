@@ -37,7 +37,7 @@ int main()
 		printf("\nERROR: Could not set control handler");
 		return 1;
 	}
-	int prop_imsize = 128;
+	int prop_imsize = 64;
 	int prop_patchsize = 8;
 	int prop_imcount = 5;
 
